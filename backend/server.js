@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 dotenv.config();
+import bcrypt from 'bcrypt';
 
 const server = express();
 let PORT = 3000;
@@ -39,6 +40,14 @@ server.post("/signup", (req, res) => {
             "error": "Password must contain 6 to 20 characters long, contain at least 1 uppercase letter, 1 lowercase letter, and 1 number"
         })
     }
+
+    // To hash the password
+    bcrypt.hash(password, 10, (err, hashedPassword) => {
+        // username is the email before the @
+        let username = email.split("@")[0]; 
+        
+        console.log(hashedPassword);
+    });
 
     return res.status(200).json({
         "status": "okay",
