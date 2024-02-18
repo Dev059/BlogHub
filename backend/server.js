@@ -23,22 +23,22 @@ server.post("/signup", (req, res) => {
     if(fullname.length < 3) {
         return res.status(403).json({
             "error": "Fullname must be at least 3 characters long"
-        })
+        });
     }
     if(!email.length) {
         return res.status(403).json({
             "error": "Email must be entered"
-        })
+        });
     }
     if(!emailRegex.test(email)) {
         return res.status(403).json({
             "error": "Invalid email"
-        })
+        });
     }
     if(!passwordRegex.test(password)) {
         return res.status(403).json({
             "error": "Password must contain 6 to 20 characters long, contain at least 1 uppercase letter, 1 lowercase letter, and 1 number"
-        })
+        });
     }
 
     // To hash the password
@@ -56,4 +56,4 @@ server.post("/signup", (req, res) => {
 
 server.listen(PORT, () => {
     console.log('Listeniing on port: ' + PORT);
-})
+});
