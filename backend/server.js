@@ -3,6 +3,10 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 dotenv.config();
 import bcrypt from 'bcrypt';
+import {nanoid} from 'nanoid';
+
+// Schema below
+import User from './Schema/User.js';
 
 const server = express();
 let PORT = 3000;
@@ -15,6 +19,29 @@ server.use(express.json());
 mongoose.connect(process.env.DB_LOCATION, {
     autoIndex: true,
 });
+
+// format to send to frontend
+const formatDatatoSend = (user) => {
+    return {
+        profile_img: user.personal_info.profile_img,
+        username: user.personal_info.username,
+        fullname: user.personal_info.fullname,
+    }
+}
+
+// Generate Unique username
+// shik@gmail.com and shik@yahoo.com has same username -> shik
+const generateUsername = async(email) => {
+    // username is the email before the @
+    let username = email.split("@")[0];
+    let isUsernameNotUnique = await User.exists({
+        "personal_info.username": username
+    });
+
+    isUsernameNotUnique ? username += nanoid().substring(0,5) : "";
+    return username;
+}
+    
 
 server.post("/signup", (req, res) => {  
     let {fullname, email, password} = req.body;
@@ -42,15 +69,28 @@ server.post("/signup", (req, res) => {
     }
 
     // To hash the password
-    bcrypt.hash(password, 10, (err, hashedPassword) => {
-        // username is the email before the @
-        let username = email.split("@")[0]; 
-        
-        console.log(hashedPassword);
-    });
+    bcrypt.hash(password, 10, async(err, hashedPassword) => {
+        let username = await generateUsername(email);
+        let user = new User( {
+            personal_info: { fullname, email, password: hashedPassword, username}
+        })
 
-    return res.status(200).json({
-        "status": "okay",
+        user.save()
+        .then((u)=> {
+            return res.status(200).json(formatDatatoSend(u))
+        })
+        .catch((err) => {
+
+            if(err.code === 11000) {
+                return res.status(500).json({
+                    "error": "Email already exists"
+                });
+            }
+                return res.status(500).json({
+                    "error": err.message
+                });
+            });
+        console.log(hashedPassword);
     });
 });
 
