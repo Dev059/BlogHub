@@ -29,7 +29,7 @@ const UserAuthForm = ({type}) => {
         let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
 
         // formData
-        let form = new FormData();
+        let form = new FormData(formElement);
         let formData = {};
 
         for(let [key, value] of form.entries()) {
@@ -61,7 +61,7 @@ const UserAuthForm = ({type}) => {
         <AnimationWrapper keyValue={type}>
             <section className="h-cover flex items-center justify-center">
             <Toaster/>
-            <form className="w-[80%] max-w-[400px]">
+            <form id="formElement" className="w-[80%] max-w-[400px]">
                 <h1 className="text-4xl font-gelasio capitalize text-center mb24">
                     {type === "sign-in" ? "Welcome back" : "Join us today"}
                 </h1>
