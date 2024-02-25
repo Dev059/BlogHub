@@ -5,6 +5,7 @@ dotenv.config();
 import bcrypt from 'bcrypt';
 import {nanoid} from 'nanoid';
 import jwt from 'jsonwebtoken';
+import cors from 'cors';
 
 // Schema below
 import User from './Schema/User.js';
@@ -12,10 +13,13 @@ import User from './Schema/User.js';
 const server = express();
 let PORT = 3000;
 
-let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
+let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email 
 let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
 
 server.use(express.json());
+
+// backend -> 3000 and frontend -> 5172 are on different domains and port numbers
+server.use(cors());
 
 mongoose.connect(process.env.DB_LOCATION, {
     autoIndex: true,

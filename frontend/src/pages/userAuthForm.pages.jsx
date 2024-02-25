@@ -4,14 +4,20 @@ import InputBox from "../components/input.component";
 import googleIcon from "../imgs/google.png";
 import { Link } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
+import axios from "axios";
 
 const UserAuthForm = ({type}) => {
 
-    const authForm = useRef();
-
     const userAuthThroughServer = (serverRoute, formData) => {
+
         // send data to server
-        
+        axios.post(import.meta.env.VITE_SERVER_DOMAIN + serverRoute, formData)
+        .then(({data}) => {
+            console.log(data);
+        })
+        .catch(({response}) => {
+            toast.error(response.data.error);
+        });
     }
 
     const handleSubmit = (e) => {
@@ -23,7 +29,7 @@ const UserAuthForm = ({type}) => {
         let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
 
         // formData
-        let form = new FormData(authForm.current);
+        let form = new FormData();
         let formData = {};
 
         for(let [key, value] of form.entries()) {
@@ -55,7 +61,7 @@ const UserAuthForm = ({type}) => {
         <AnimationWrapper keyValue={type}>
             <section className="h-cover flex items-center justify-center">
             <Toaster/>
-            <form ref={authForm} className="w-[80%] max-w-[400px]">
+            <form className="w-[80%] max-w-[400px]">
                 <h1 className="text-4xl font-gelasio capitalize text-center mb24">
                     {type === "sign-in" ? "Welcome back" : "Join us today"}
                 </h1>
