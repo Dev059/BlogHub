@@ -9,8 +9,15 @@ const UserAuthForm = ({type}) => {
 
     const authForm = useRef();
 
+    const userAuthThroughServer = (serverRoute, formData) => {
+        // send data to server
+        
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        let serverRoute = type === "sign-in" ? "/signin" : "/signup";
 
         let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
         let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
@@ -38,9 +45,10 @@ const UserAuthForm = ({type}) => {
         }
         if(!passwordRegex.test(password)) {
             return toast.error("Password must contain 6 to 20 characters long, contain at least 1 uppercase letter, 1 lowercase letter, and 1 number");
-    }
+        }
 
-        console.log(formData);
+        // send data to backend
+        userAuthThroughServer(serverRoute, formData);
     }
 
     return (
