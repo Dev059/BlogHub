@@ -1,16 +1,37 @@
 import { Routes , Route} from 'react-router-dom'
 import Navbar from './components/navbar.component'
 import UserAuthForm from './pages/userAuthForm.pages'
+import { createContext, useEffect, useState } from 'react'
+import { lookInSession } from './common/session';
 
-export default function App() {
+export const UserContext = createContext({});
+
+const App = () => {
+
+  const [userAuth, setUserAuth] = useState({});
+
+  // useEffect will run only one time
+  useEffect(() => {
+
+    let userInSession = lookInSession("user");
+
+    userInSession ? 
+    setUserAuth(JSON.parse(userInSession)) : 
+    setUserAuth({access_token: null});
+  }, []);
+
   return (
-    <Routes>
-      <Route  path="/" element={<Navbar/>}>
-        <Route  path="signin" element={<UserAuthForm type="sign-in" />}/> 
-        <Route  path="signup" element={<UserAuthForm type="sign-up" />}/>
-        
-      </Route>
-    </Routes>
+    <UserContext.Provider value={{userAuth, setUserAuth}}>
+      <Routes>
+        <Route  path="/" element={<Navbar/>}>
+          <Route  path="signin" element={<UserAuthForm type="sign-in" />}/> 
+          <Route  path="signup" element={<UserAuthForm type="sign-up" />}/>
+          
+        </Route>
+      </Routes>
+    </UserContext.Provider>
   )
 }
 //  "/" + "signin" = "/signin" 
+
+export default App;
