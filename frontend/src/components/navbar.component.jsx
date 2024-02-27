@@ -9,10 +9,15 @@ const Navbar = () => {
     // For toggling search box visibility
     const [ serachBoxVisibility, setSearchBoxVisibility ] = useState(false);
 
+    // For toggling user navigation panel
+    const [ userNavPanel, setUserNavPanel ] = useState(false);
+
     // Show user profile and logout button not signin button
     const { userAuth, userAuth: { access_token, profile_img } } = useContext(UserContext);
 
-
+    const handleUserNavPanel = () => {
+        setUserNavPanel(currentVal => !currentVal);
+    }
 
     return (
         <>
@@ -54,12 +59,16 @@ const Navbar = () => {
                             </button>
                         </Link>
 
-                        <div className='relative'>
+                        <div className='relative' onClick={handleUserNavPanel}>
                             <button className='w-12 h-12 mt-1'>
                                 <img src={profile_img} alt="profile_img" className='w-full h-full object-cover rounded-full' />
                             </button>
 
-                            <UserNavigationPanel></UserNavigationPanel>
+                            {
+                                userNavPanel ? 
+                                <UserNavigationPanel />
+                                : ""
+                            }
 
                         </div>
                     </>
