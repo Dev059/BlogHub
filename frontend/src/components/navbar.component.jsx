@@ -19,6 +19,14 @@ const Navbar = () => {
         setUserNavPanel(currentVal => !currentVal);
     }
 
+    const handleBlur = () => {
+
+        setTimeout(() => {
+            setUserNavPanel(false);
+        }, 200);
+
+    }
+
     return (
         <>
         <nav className="navbar">
@@ -59,7 +67,7 @@ const Navbar = () => {
                             </button>
                         </Link>
 
-                        <div className='relative' onClick={handleUserNavPanel}>
+                        <div className='relative' onClick={handleUserNavPanel} onBlur={handleBlur}>
                             <button className='w-12 h-12 mt-1'>
                                 <img src={profile_img} alt="profile_img" className='w-full h-full object-cover rounded-full' />
                             </button>
