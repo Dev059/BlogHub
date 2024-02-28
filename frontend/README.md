@@ -1,8 +1,24 @@
-# React + Vite
+Data flow in this project is 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+1. main.jsx -> "BrowserRouter" from react-router-dom
 
-Currently, two official plugins are available:
+2. App.jsx -> 
+            Routes and Route from react-router-dom 
+            navbar.component.jsx 
+            userAuthForm.pages.jsx
+            lookInSession is used to find session from session.jsx
+            then
+            useContext() is made to send access_token and profile_img
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+3. navbar.component.jsx ->  
+                logo.png
+                search box and its visibility using useState()
+                access_token and profile_img receive from App.jsx using useContext()
+                if access_token is NULL then 
+                    user-navigation.component.jsx which slides down which has signOUT feature too
+                else
+                    signIN/signUP button
+
+5. user-navigation.component.jsx ->
+
+4. userAuthForm.pages.jsx
