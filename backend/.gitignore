@@ -15,3 +15,7 @@
 # Operating System Files
 .DS_Store
 Thumbs.db
+
+
+# Firebase Admin SDK
+/mern-blogging-project-firebase-adminsdk-kwt5d-3bfbf2eb59.json
