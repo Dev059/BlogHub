@@ -23,6 +23,12 @@ server.use(cors());
 
 mongoose.connect(process.env.DB_LOCATION, {
     autoIndex: true,
+})
+.then(() => {
+    console.log("Connected to database");
+})
+.catch((err) => {
+    console.log("Error occured while connecting to database: " + err.message);
 });
 
 // format to send to frontend
