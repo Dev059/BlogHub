@@ -129,20 +129,28 @@ server.post("/signin", (req, res) => {
             return res.status(403).json({ "error": "Email not found" });
         }
 
-        // comparing the password
-        bcrypt.compare(password, user.personal_info.password , (err, result) => {
-            if(err) {
-                return res.status(403).json({"error": "Error occured while login try again"});
-            }
+        // compare the password only when google auth is false
+        if(!user.google_auth) {
+            
+            // comparing the password
+            bcrypt.compare(password, user.personal_info.password , (err, result) => {
+                if(err) {
+                    return res.status(403).json({"error": "Error occured while login try again"});
+                }
+                
+                if(!result) {
+                    return res.status(403).json({"error": "Incorrect Password"});
+                }
+                else {
+                    return res.status(200).json(formatDatatoSend(user));
+                }
 
-            if(!result) {
-                return res.status(403).json({"error": "Incorrect Password"});
-            }
-            else {
-                return res.status(200).json(formatDatatoSend(user));
-            }
-        });
-    })
+            });
+        }
+        else {
+            return res.status(403).json({"error": "Account was signed in with google. Try logging in using google account"})}
+        }
+    )
     .catch(err => {
         console.log(err);
         return res.status(500).json({ "error": err.message });
