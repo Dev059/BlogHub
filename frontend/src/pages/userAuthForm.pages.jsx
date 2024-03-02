@@ -7,6 +7,7 @@ import { Toaster, toast } from "react-hot-toast";
 import axios from "axios";
 import { storeInSession } from "../common/session";
 import { UserContext } from "../App";
+import { authWithGoogle } from "../common/firebase";
 
 const UserAuthForm = ({type}) => {
 
@@ -61,6 +62,18 @@ const UserAuthForm = ({type}) => {
 
         // send data to backend
         userAuthThroughServer(serverRoute, formData);
+    }
+
+    const handleGoogleAuth = (e) => {
+        e.preventDefault();
+        authWithGoogle()
+        .then((user) => {
+            console.log(user);
+        })
+        .catch(error => {
+            toast.error("Trouble login through google");
+            return console.log(error);
+        });
     }
 
     return (
@@ -118,7 +131,10 @@ const UserAuthForm = ({type}) => {
                     <hr className="w-1/2 border-black"/>
                 </div>
 
-                <button className="btn-dark flex items-center justify-center gap-4 w-[90%] center">
+                <button 
+                    className="btn-dark flex items-center justify-center gap-4 w-[90%] center"
+                    onClick={handleGoogleAuth}
+                >
                     <img src={googleIcon} alt="Google Icon" className="w-5"/>
                     Continue with google
                 </button>
