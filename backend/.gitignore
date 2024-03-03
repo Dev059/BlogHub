@@ -17,5 +17,5 @@
 Thumbs.db
 
 
-# Firebase Admin SDK
-/mern-blogging-project-firebase-adminsdk-kwt5d-3bfbf2eb59.json
+# Firebase Admin SDK download this data from firebase admin sdk and put it in the root directory and add it to .gitignore and rename it to serviceAccountKey.json
+/serviceAccountKey.json

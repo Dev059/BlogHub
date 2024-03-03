@@ -7,7 +7,7 @@ import {nanoid} from 'nanoid';
 import jwt from 'jsonwebtoken';
 import cors from 'cors';
 import admin from 'firebase-admin';
-import serviceAccountKey from './mern-blogging-project-firebase-adminsdk-kwt5d-3bfbf2eb59.json' assert {type: "json"};
+import serviceAccountKey from './serviceAccountKey.json' assert {type: "json"};
 import {getAuth} from 'firebase-admin/auth';
 
 
