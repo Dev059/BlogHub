@@ -5,6 +5,7 @@ Data flow in this project is
 
 2. App.jsx -> 
             Routes and Route from react-router-dom 
+            editor.pages.jsx
             navbar.component.jsx 
             userAuthForm.pages.jsx
             lookInSession is used to find session from session.jsx
