@@ -157,6 +157,7 @@ server.post("/signin", (req, res) => {
     })
 })
 
+// Google authorization frontend data received from path "/google-auth"
 server.post("/google-auth", async(req, res) => {
     // Google Access token is sent from frontend for verification
     // after verification it store the user in db and hence async is used
