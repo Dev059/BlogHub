@@ -1,6 +1,7 @@
 Data flow in this project is 
 
 1. main.jsx -> "BrowserRouter" from react-router-dom
+                App.jsx
 
 2. App.jsx -> 
             Routes and Route from react-router-dom 
