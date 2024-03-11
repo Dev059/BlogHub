@@ -10,7 +10,7 @@ Data flow in this project is
             userAuthForm.pages.jsx
             lookInSession is used to find session from session.jsx
             then
-            useContext() is made to send access_token and profile_img
+            useContext() hook is made to send access_token and profile_img
 
 3. navbar.component.jsx ->  
                 logo.png
