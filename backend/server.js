@@ -9,6 +9,7 @@ import cors from 'cors';
 import admin from 'firebase-admin';
 import serviceAccountKey from './serviceAccountKey.json' assert {type: "json"};
 import {getAuth} from 'firebase-admin/auth';
+import aws from 'aws-sdk';
 
 
 // Schema below
@@ -39,6 +40,14 @@ mongoose.connect(process.env.DB_LOCATION, {
 .catch((err) => {
     console.log("Error occured while connecting to database: " + err.message);
 });
+
+// Setting up s3 bucket
+// This create s3 aws client which is used to access the bucket for some methods which is assign to the user
+const s3 = new aws.s3( {
+    region: "ap-south-1",
+    accessKeyId: process.env.AWS_ACCESS_KEY,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+})
 
 // format to send to frontend
 const formatDatatoSend = (user) => {
