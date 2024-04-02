@@ -43,11 +43,24 @@ mongoose.connect(process.env.DB_LOCATION, {
 
 // Setting up s3 bucket
 // This create s3 aws client which is used to access the bucket for some methods which is assign to the user
-const s3 = new aws.s3( {
+const s3 = new aws.S3( {
     region: "ap-south-1",
     accessKeyId: process.env.AWS_ACCESS_KEY,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 })
+//Generate a url for sending data from frontend to aws bucket
+const generateUploadURL = async () => {
+    const date = new Date();
+    const imageName = `${nanoid()}-${date.getTime()}.jpeg`;
+
+    // it is predefined s3 promise to generate URL
+    return await s3.getSignedUrlPromise( 'putObject', {
+        Bucket: "mern-blogging-website-bucket",
+        Key: imageName,
+        Expires: 1000,
+        ContentType: "image/jpeg",
+    })
+}
 
 // format to send to frontend
 const formatDatatoSend = (user) => {
