@@ -88,7 +88,20 @@ const generateUsername = async(email) => {
     isUsernameNotUnique ? username += nanoid().substring(0,5) : "";
     return username;
 }
-    
+   
+
+// Upload image url route in aws s3
+server.get("/get-upload-url", (req, res)=> {
+    generateUploadURL()
+    .then(url => res.status(200).json({ uploadURL: url }))
+    .catch(err => {
+        console.log(err.message);
+        return res.status(500).json({
+            error: err.message
+        })
+    })
+    // after going to this path it will generate a URL which will send data from frontend to s3 bucket
+})
 
 server.post("/signup", (req, res) => {  
     let {fullname, email, password} = req.body;
