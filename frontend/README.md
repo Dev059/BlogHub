@@ -16,6 +16,8 @@ Data flow in this project is
             It also takes care of session of user by finding the user with its acess token. If found then parsing token with JSON format or null
 
 3. editor.pages.jsx -> 
+            1. It gets access token Checks whether it is null or not If null then shows no users is in session then signIn page
+            2. It checks whether it is editor page or not. If yes then blog-editor.component.jsx or publish-form.component.jsx
 
 
 4. navbar.component.jsx ->  
