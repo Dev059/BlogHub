@@ -4,6 +4,7 @@ import AnimationWrapper from '../common/page-animation';
 import defaultBanner from '../imgs/blog banner.png'
 import { uploadImage } from '../common/aws';
 import { useRef } from 'react';
+import { Toaster, toast} from 'react-hot-toast';
 
 const BlogEditor = () => {
 
@@ -13,10 +14,18 @@ const BlogEditor = () => {
         let img = e.target.files[0];
         
         if(img) {
+
+            let loadingToast = toast.loading("Uploading...")
             uploadImage(img).then((url) => {
                 if(url) {
+                    toast.dismiss(loadingToast);
+                    toast.success("Uploaded 👍")
                     blogBannerRef.current.src = url;
                 }
+            })
+            .catch(err => {
+                toast.dismiss(loadingToast);
+                return toast.error(err);
             })
         }
     }
@@ -41,6 +50,7 @@ const BlogEditor = () => {
                 </div>
             </nav>
 
+            <Toaster />
             <AnimationWrapper>
                 <section>
                     <div className='mx-auto max-w-[900px] w-full'>
