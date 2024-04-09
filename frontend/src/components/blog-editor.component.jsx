@@ -2,12 +2,20 @@ import { Link } from 'react-router-dom';
 import logo  from '../imgs/logo.png';
 import AnimationWrapper from '../common/page-animation';
 import defaultBanner from '../imgs/blog banner.png'
+import { uploadImage } from '../common/aws';
 
 const BlogEditor = () => {
 
     const handleBannerUpload = (e) => {
         let img = e.target.files[0];
-        console.log(img );
+        
+        if(img) {
+            uploadImage(img).then((url) => {
+                if(url) {
+
+                }
+            })
+        }
     }
 
     return (
