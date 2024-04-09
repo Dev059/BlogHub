@@ -3,12 +3,13 @@ import logo  from '../imgs/logo.png';
 import AnimationWrapper from '../common/page-animation';
 import defaultBanner from '../imgs/blog banner.png'
 import { uploadImage } from '../common/aws';
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
 import { Toaster, toast} from 'react-hot-toast';
+import { EditorContext } from '../pages/editor.pages';
 
 const BlogEditor = () => {
 
-    let blogBannerRef = useRef();
+    let { blog, blog: { title, banner, content, tags, des }, setBlog} = useContext(EditorContext);
 
     const handleBannerUpload = (e) => {
         let img = e.target.files[0];
@@ -20,7 +21,7 @@ const BlogEditor = () => {
                 if(url) {
                     toast.dismiss(loadingToast);
                     toast.success("Uploaded 👍")
-                    blogBannerRef.current.src = url;
+                    setBlog({...blog, banner: url}) 
                 }
             })
             .catch(err => {
@@ -44,6 +45,7 @@ const BlogEditor = () => {
         input.style.height = "auto";
         input.style.height = input.scrollHeight + "px";
 
+        setBlog( { ...blog, title: input.value})
     }
 
     return (
@@ -52,8 +54,8 @@ const BlogEditor = () => {
                 <Link to="/" className='flex-none w-10'>
                     <img src={logo} alt="logo" />
                 </Link>
-                <p className='max-md: hidden text-black line-clamp-1 w-full'>
-                    New Blog
+                <p className='max-md:hidden text-black line-clamp-1 w-full'>
+                    {title.length ? title: "New Blog" }
                 </p>
 
                 <div className='flex gap-4 ml-auto'>
@@ -74,8 +76,7 @@ const BlogEditor = () => {
                         <div className='relative aspect-video bg-white border-4 border-grey hover:opacity-80'>
                             <label htmlFor='uploadBanner'>
                                 <img 
-                                    ref={blogBannerRef}
-                                    src={defaultBanner} 
+                                    src={banner} 
                                     className='z-20'
                                     alt="Upload your banner"
                                 />
