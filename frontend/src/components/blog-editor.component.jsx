@@ -3,8 +3,11 @@ import logo  from '../imgs/logo.png';
 import AnimationWrapper from '../common/page-animation';
 import defaultBanner from '../imgs/blog banner.png'
 import { uploadImage } from '../common/aws';
+import { useRef } from 'react';
 
 const BlogEditor = () => {
+
+    let blogBannerRef = useRef();
 
     const handleBannerUpload = (e) => {
         let img = e.target.files[0];
@@ -12,7 +15,7 @@ const BlogEditor = () => {
         if(img) {
             uploadImage(img).then((url) => {
                 if(url) {
-
+                    blogBannerRef.current.src = url;
                 }
             })
         }
@@ -45,6 +48,7 @@ const BlogEditor = () => {
                         <div className='relative aspect-video bg-white border-4 border-grey hover:opacity-80'>
                             <label htmlFor='uploadBanner'>
                                 <img 
+                                    ref={blogBannerRef}
                                     src={defaultBanner} 
                                     className='z-20'
                                     alt="Upload your banner"
