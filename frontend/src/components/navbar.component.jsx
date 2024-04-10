@@ -7,7 +7,7 @@ import UserNavigationPanel from './user-navigation.component';
 const Navbar = () => {
 
     // For toggling search box visibility
-    const [ serachBoxVisibility, setSearchBoxVisibility ] = useState(false);
+    const [ searchBoxVisibility, setSearchBoxVisibility ] = useState(false);
 
     // For toggling user navigation panel
     const [ userNavPanel, setUserNavPanel ] = useState(false);
@@ -19,6 +19,7 @@ const Navbar = () => {
         setUserNavPanel(currentVal => !currentVal);
     }
 
+    // for working of signOUT button due to onBlur properties
     const handleBlur = () => {
 
         setTimeout(() => {
@@ -35,7 +36,7 @@ const Navbar = () => {
                 <img src={logo} alt="logo" className='w-full' />
             </Link>
 
-            <div className={"absolute bg-white w-full left-0 top-full mt-0.5 border-b border-grey py-4 px-[5vw] md:border-0 md:block md:relative md:inset-0 md:p-0 md:w-auto md:show " + ( serachBoxVisibility ? "show" : "hide")}>
+            <div className={"absolute bg-white w-full left-0 top-full mt-0.5 border-b border-grey py-4 px-[5vw] md:border-0 md:block md:relative md:inset-0 md:p-0 md:w-auto md:show " + ( searchBoxVisibility ? "show" : "hide")}>
                 <input 
                     type="text"
                     placeholder='Search'
