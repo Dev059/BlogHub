@@ -3,13 +3,24 @@ import logo  from '../imgs/logo.png';
 import AnimationWrapper from '../common/page-animation';
 import defaultBanner from '../imgs/blog banner.png'
 import { uploadImage } from '../common/aws';
-import { useContext, useRef } from 'react';
+import { useContext, useEffect } from 'react';
 import { Toaster, toast} from 'react-hot-toast';
 import { EditorContext } from '../pages/editor.pages';
+import EditorJS from '@editorjs/editorjs';
 
 const BlogEditor = () => {
 
     let { blog, blog: { title, banner, content, tags, des }, setBlog} = useContext(EditorContext);
+
+    // after render runs once which is used for editing page
+    useEffect( () => {
+        let editor = new EditorJS({
+            holderId: "textEditor", 
+            data: '',
+            tools: tools,
+            placeholder: "Let's write an awesome story"
+        });
+    }, []);
 
     const handleBannerUpload = (e) => {
         let img = e.target.files[0];
@@ -48,6 +59,12 @@ const BlogEditor = () => {
         setBlog( { ...blog, title: input.value})
     }
 
+    // since img src is banner which we get when we upload the image so error is generated 
+    const handleError = (e) => {
+        let img = e.target;
+        img.src = defaultBanner;
+    }
+
     return (
         <>
             <nav className='navbar'>
@@ -79,6 +96,7 @@ const BlogEditor = () => {
                                     src={banner} 
                                     className='z-20'
                                     alt="Upload your banner"
+                                    onError={handleError}
                                 />
                                 <input
                                     id='uploadBanner'
@@ -96,8 +114,11 @@ const BlogEditor = () => {
                             onKeyDown={handleTitleKeyDown}
                             onChange={handleTitleChange}
                         >
-
                         </textarea>
+
+                        <hr className='w-full opacity-10 my-5'/>
+
+                        <div id="textEditor" className='font-gelasio'></div>
 
                     </div>
                 </section>
