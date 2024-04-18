@@ -62,6 +62,31 @@ const generateUploadURL = async () => {
     })
 }
 
+
+// Middleware to check the user is authenticated user using Acess_token
+const verifyJWT = (req, res, next) => {
+
+    // this authorization Header contain "bearer token" first a string bearer and then token so split it and taken the second element
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if(token == null) {
+        return res.status(401).json( {
+            error: "No access token"
+        })
+    }
+
+    jwt.verify(token, process.env.SECRET_ACCESS_KEY, (err, user) => {
+        if(err) {
+            return res.status(403).json( {
+                error: "Access token is invalid"
+            })
+        }
+        req.user = user.id;
+        next();
+    })
+}
+
 // format to send to frontend
 const formatDatatoSend = (user) => {
 
@@ -253,6 +278,49 @@ server.post("/google-auth", async(req, res) => {
     .catch((err) => {
         return res.status(500).json({ "error": "Failed to authenticate you with google. Try with some other google account" });
     })
+})
+
+// create post is the method where user can crete post
+// but it should be an authenticate user which is verified by Middleware using access_token
+server.post('/create-blog', verifyJWT, (req, res) => {
+    let authorId = req.user;
+    let { title, des, banner, tags, content, draft } = req.body;
+
+    // validate
+    if(!title.length) {
+        return res.status(403).json( {
+            error: "You must provide a title to publish the blog"
+        });
+    }
+
+    if(!des.length || des.length > 200) {
+        return res.status(403).json( {
+            error: "You must provide blog description under 200 characters"
+        });
+    }
+
+    if(!banner.length) {
+        return res.status(403).json( {
+            error: "You must provide blog banner to publish it"
+        });
+    }
+
+    if(!content.blocks.length) {
+        return res.status(403).json( {
+            error: "There must be some blog content to publish it"
+        });
+    }
+
+    if(!tags.length || tags.length > 10) {
+        return res.status(403).json( {
+            error: "Provide tags in order to publish the blog, Maximum is 10"
+        });
+    }
+
+    // 'Tech' tag is not different then 'tech' tag
+    tags = tags.map(tag => tag.toLowerCase());
+
+    let 
 })
 
 server.listen(PORT, () => {
