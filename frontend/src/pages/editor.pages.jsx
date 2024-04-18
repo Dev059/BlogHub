@@ -25,13 +25,16 @@ const Editor = () => {
 
     const [ editorState, setEditorState ] = useState("editor"); // to show blogEditor or PublishForm 
 
+    // TO Track the editor if we move to next page
+    const [textEditor, setTextEditor] = useState({ isReady: false});
+
     let { userAuth: { access_token } } = useContext(UserContext);
 
     // EditorContext.Provider is like a component which has access to EditorContext of Context React Hook
     return (
         <>
          
-            <EditorContext.Provider value={ {blog, setBlog, editorState, setEditorState} }>
+            <EditorContext.Provider value={ {blog, setBlog, editorState, setEditorState, textEditor, setTextEditor} }>
                 {
                     access_token === null ? 
                     <Navigate to="/signin" /> 
