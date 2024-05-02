@@ -4,6 +4,7 @@ import UserAuthForm from './pages/userAuthForm.pages'
 import { createContext, useEffect, useState } from 'react'
 import { lookInSession } from './common/session';
 import Editor from './pages/editor.pages';
+import HomePage from './pages/home.page';
 
 export const UserContext = createContext({});
 
