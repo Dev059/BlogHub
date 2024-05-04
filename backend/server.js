@@ -292,14 +292,10 @@ server.get('/latest-blogs', (req, res) => {
     .select("blog_id title des banner activity tags publishedAt -_id")
     .limit(maxLimit)
     .then(blogs => {
-        return res.status(200).json({
-            blogs
-        })
+        return res.status(200).json({ blogs })
     })
     .catch(err => {
-        return res.status(500).json({
-            error: err.message
-        })
+        return res.status(500).json({ error: err.message })
     })
 })
 
