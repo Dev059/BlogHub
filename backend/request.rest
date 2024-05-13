@@ -9,9 +9,9 @@
 #     "password": "Jong@a33sd"
 # }
 
-POST http://localhost:3000/get-profile
+POST http://localhost:3000/get-blog
 Content-Type: application/json
 
 {
-    "username": "shikhar"
+    "blog_id": "programming2P0ouS1ZqGQ8pAB2UPl0B"
 }
