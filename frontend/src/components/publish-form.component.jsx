@@ -19,6 +19,7 @@ const PublishForm = () => {
     let navigate = useNavigate();
 
     const handleCloseEvent = () => {
+        // Changing the state can caused re rendering of the react tree
         setEditorState("editor");
     }
 

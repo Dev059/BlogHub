@@ -32,7 +32,7 @@ server.use(express.json());
 // backend -> 3000 and frontend -> 5172 are on different domains and port numbers
 server.use(cors());
 
-mongoose.connect(process.env.DB_LOCATION, {
+mongoose.connect(process.env.MY_DB_LOCATION, {
     autoIndex: true,
 })
 .then(() => {
@@ -46,8 +46,8 @@ mongoose.connect(process.env.DB_LOCATION, {
 // This create s3 aws client which is used to access the bucket for some methods which is assign to the user
 const s3 = new aws.S3( {
     region: "ap-south-1",
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    accessKeyId: process.env.MY_AWS_ACCESS_KEY,
+    secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY
 })
 //Generate a url for sending data from frontend to aws bucket
 const generateUploadURL = async () => {
@@ -77,7 +77,7 @@ const verifyJWT = (req, res, next) => {
         })
     }
 
-    jwt.verify(token, process.env.SECRET_ACCESS_KEY, (err, user) => {
+    jwt.verify(token, process.env.MY_SECRET_ACCESS_KEY, (err, user) => {
         if(err) {
             return res.status(403).json( {
                 error: "Access token is invalid"
@@ -92,7 +92,7 @@ const verifyJWT = (req, res, next) => {
 const formatDatatoSend = (user) => {
 
     // Access token is generated using jwt and send to frontend for authentication
-    const access_token = jwt.sign({id: user._id}, process.env.SECRET_ACCESS_KEY);
+    const access_token = jwt.sign({id: user._id}, process.env.MY_SECRET_ACCESS_KEY);
 
     return {
         access_token,
@@ -331,12 +331,12 @@ server.get('/trending-blogs', (req, res) => {
 })
 
 server.post("/search-blogs", (req, res) => {
-    let { tag, query, author, page } = req.body;
+    let { tag, query, author, page, limit, eliminate_blog } = req.body;
 
     let findQuery;
     
     if(tag) {
-        findQuery = { tags: tag, draft: false };
+        findQuery = { tags: tag, draft: false, blog_id: { $ne: eliminate_blog} };
     }
     else if(query) {
         findQuery = { draft: false, title: new RegExp(query, 'i') }
@@ -345,7 +345,7 @@ server.post("/search-blogs", (req, res) => {
         findQuery = { author, draft: false}
     }
 
-    let maxLimit = 2;
+    let maxLimit = limit ? limit : 2;
 
     Blog.find(findQuery)
     .populate("author", "personal_info.profile_img personal_info.username personal_info.fullname -_id")

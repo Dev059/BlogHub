@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import logo  from '../imgs/logo.png';
+import logo from '../imgs/logo.png';
 import AnimationWrapper from '../common/page-animation';
 import defaultBanner from '../imgs/blog banner.png'
 import { uploadImage } from '../common/aws';
@@ -17,11 +17,13 @@ const BlogEditor = () => {
 
     let { userAuth: { access_token } } = useContext(UserContext);
 
-    let navigate = useNavigate();
+    let navigate = useNavigate(); // use to navigate programmatically
 
     // after render runs once which is used for editing page
     useEffect( () => {
         if(!textEditor.isReady) {
+
+            // EditorJS is the library that is used for writing blog like having heading, italics, adding url, bullet points, etc. 
             setTextEditor(new EditorJS({
                 holderId: "textEditor", 
                 data: content,
@@ -37,6 +39,8 @@ const BlogEditor = () => {
         if(img) {
 
             let loadingToast = toast.loading("Uploading...")
+
+            // uploadImage is the function used in AWS for generating url link for storing S3 bucket
             uploadImage(img).then((url) => {
                 if(url) {
                     toast.dismiss(loadingToast);

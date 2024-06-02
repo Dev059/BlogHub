@@ -7,7 +7,7 @@ import BlogEditor from '../components/blog-editor.component';
 import PublishForm from '../components/publish-form.component';
 import { createContext } from "react";
 
-// empty structure for our blog
+// empty structure for our blog data items
 const blogStructure = {
     title: '',
     banner: '',
@@ -17,15 +17,18 @@ const blogStructure = {
     author: { personal_info: { } }
 }
 
+// to store the value of blog data item blogStructure
 export const EditorContext = createContext({ });
 
-const Editor = () => {
+const   Editor = () => {
     // WE have to make this state so that it is parent file for Blog Editor page and Publish Draft page
     const [ blog, setBlog ] = useState(blogStructure)
 
     const [ editorState, setEditorState ] = useState("editor"); // to show blogEditor or PublishForm 
 
     // TO Track the editor if we move to next page
+    // isReady is the function used for EditorJS library
+    
     const [textEditor, setTextEditor] = useState({ isReady: false});
 
     let { userAuth: { access_token } } = useContext(UserContext);
