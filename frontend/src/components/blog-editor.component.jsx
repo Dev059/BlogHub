@@ -56,7 +56,7 @@ const BlogEditor = () => {
     }
 
     const handleTitleKeyDown =(e) => {
-        // keyCode is just ascii value of the input value so if you press enter it is equl to 13
+        // keyCode is just ascii value of the input value so if you press enter it is equal to 13
         if(e.keyCode === 13) {
             e.preventDefault();
         }
