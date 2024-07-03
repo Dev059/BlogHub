@@ -417,7 +417,7 @@ server.post("/get-profile", (req, res) => {
 // but it should be an authenticate user which is verified by Middleware using access_token
 server.post('/create-blog', verifyJWT, (req, res) => {
     let authorId = req.user;
-    let { title, des, banner, tags, content, draft } = req.body;
+    let { title, des, banner, tags, content, draft, id } = req.body;
 
     // validate
     if(!title.length) {
@@ -459,43 +459,57 @@ server.post('/create-blog', verifyJWT, (req, res) => {
     // 'Tech' tag is not different then 'tech' tag
     tags = tags.map(tag => tag.toLowerCase());
 
-    let blog_id = title.replace(/[^a-zA-Z0-9]/g, ' ').replace(/\s+/g, "-").trim() + nanoid();
+    let blog_id = id || title.replace(/[^a-zA-Z0-9]/g, ' ').replace(/\s+/g, "-").trim() + nanoid();
 
-    // new blog instance is made
-    let blog = new Blog( {
-        title, des, banner, content, tags, author: authorId, blog_id, draft: Boolean(draft)
-    })
-
-    // mongodb save the blog
-    blog.save().then((blog) => {
-        let incrementVal = draft ? 0 : 1;
-
-        User.findOneAndUpdate(
-            { _id: authorId}, 
-            { $inc: { "account_info.total_posts" : incrementVal },
-            $push: { "blogs": blog._id }
+    if(id) {
+        Blog.findOneAndUpdate({ blog_id }, { title, des, banner, content, tags, draft: draft ? draft : false})
+        .then(() => {
+            return res.status(200).json({id: blog_id});
         })
-        .then(user => {
-            return res.status(200).json( {
-                id: blog.blog_id
+        .catch(err => {
+            return res.status(500).json({error: err.message});
+        })
+    }
+
+    else {
+
+        // new blog instance is made
+        let blog = new Blog( {
+            title, des, banner, content, tags, author: authorId, blog_id, draft: Boolean(draft)
+        })
+    
+        // mongodb save the blog
+        blog.save().then((blog) => {
+            let incrementVal = draft ? 0 : 1;
+    
+            User.findOneAndUpdate(
+                { _id: authorId}, 
+                { $inc: { "account_info.total_posts" : incrementVal },
+                $push: { "blogs": blog._id }
+            })
+            .then(user => {
+                return res.status(200).json( {
+                    id: blog.blog_id
+                })
+            })
+            .catch(err => {
+                return res.status(500).json({
+                    error: "Failed to update total posts number"
+                })
             })
         })
         .catch(err => {
             return res.status(500).json({
-                error: "Failed to update total posts number"
+                error: err.message
             })
         })
-    })
-    .catch(err => {
-        return res.status(500).json({
-            error: err.message
-        })
-    })
+    }
+
 })
 
 server.post("/get-blog", (req, res) => {
-    let { blog_id } = req.body;
-    let incrementVal = 1;
+    let { blog_id, draft, mode } = req.body;
+    let incrementVal = mode != "edit" ? 1 : 0;
 
     // find the document and inc the total_reads by 1
     Blog.findOneAndUpdate({ blog_id }, {$inc: {"activity.total_reads": incrementVal}})
@@ -509,6 +523,10 @@ server.post("/get-blog", (req, res) => {
         .catch(err => {
             return res.status(500).json({ error: err.message })
         })
+
+        if(blog.draft && !draft) {
+            return res.status(500).json({error: "you cannot access draft blogs" })
+        }
 
         return res.status(200).json({ blog });
     })

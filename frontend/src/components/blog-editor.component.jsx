@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import logo from '../imgs/logo.png';
 import AnimationWrapper from '../common/page-animation';
 import defaultBanner from '../imgs/blog banner.png'
@@ -17,6 +17,8 @@ const BlogEditor = () => {
 
     let { userAuth: { access_token } } = useContext(UserContext);
 
+    let { blog_id } = useParams();
+
     let navigate = useNavigate(); // use to navigate programmatically
 
     // after render runs once which is used for editing page
@@ -26,7 +28,7 @@ const BlogEditor = () => {
             // EditorJS is the library that is used for writing blog like having heading, italics, adding url, bullet points, etc. 
             setTextEditor(new EditorJS({
                 holderId: "textEditor", 
-                data: content,
+                data: Array.isArray(content) ? content[0] : content ,
                 tools: tools,
                 placeholder: "Let's write an awesome story"
             }));
@@ -131,7 +133,7 @@ const BlogEditor = () => {
 
                 // headers is passed for authorization. In Real access token is send to backend
 
-                axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/create-blog", blogObj, {
+                axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/create-blog", {...blogObj, id:blog_id}, {
                     headers: {
                         'Authorization': `Bearer ${access_token}`
                     }

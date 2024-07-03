@@ -18,7 +18,7 @@ const Quote = ({quote, caption}) => {
 
 const List = ({style, items}) => {
     return (
-        <ol className={`pl-5 ${style == " ordered " ? " list-decimal " : " list-disc "}`}>
+        <ol className={`pl-5 ${style == "ordered" ? " list-decimal" : " list-disc"}`}>
             {
                 items.map((listItem, i) => {
                     return <li key={i} className="my-4" dangerouslySetInnerHTML={{__html: listItem}}></li>
@@ -43,7 +43,7 @@ const BlogContent = ({block}) => {
             return <h3 className="text-3xl font-bold" dangerouslySetInnerHTML={{__html: data.text}}></h3>
         }
         
-        return <h3 className="text-4xl font-bold" dangerouslySetInnerHTML={{__html: data.text}}></h3>
+        return <h2 className="text-4xl font-bold" dangerouslySetInnerHTML={{__html: data.text}}></h2>
     }
 
     if(type == "image") {
